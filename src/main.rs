@@ -1,4 +1,4 @@
-#![feature(array_windows)]
+#![feature(exclusive_range_pattern)]
 
 mod days;
 use days::*;

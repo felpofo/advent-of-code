@@ -138,7 +138,60 @@ pub fn days() -> &'static [[fn(path: &str) -> usize; 2]] {
                 score
             }
         ],
-        // Day X
+        // Day 3
+        [
+            // Part 1
+            |path: &str| -> usize {
+                read_to_string(path)
+                    .unwrap()
+                    .trim_end()
+                    .lines()
+                    .filter_map(|b| {
+                        let half = b.len() / 2;
+
+                        let compartiments = (&b[..half], &b[half..]);
+
+                        for c in compartiments.1.bytes() {
+                            let a = compartiments.0.bytes().find(|&a| a == c);
+                            if let Some(a) = a {
+                                return Some(char::from(a));
+                            }
+                        }
+
+                        None
+                    }).map(|c| match c {
+                        'a'..='z' => c as usize - 96,
+                        'A'..='Z' => c as usize - 64 + 26,
+                        _ => unreachable!(),
+                    }).sum()
+            },
+            // Part 2
+            |path: &str| -> usize {
+                read_to_string(path)
+                    .unwrap()
+                    .trim_end()
+                    .lines()
+                    .collect::<Vec<_>>()
+                    .chunks_exact(3)
+                    .map(|g| {
+                        for a in g[0].bytes() {
+                            let b = g[1].bytes().find(|&b| b == a);
+                            let c = g[2].bytes().find(|&c| c == a);
+
+                            if b.is_some() && c.is_some() {
+                                return match char::from(a) {
+                                    'a'..='z' => a as usize - 96,
+                                    'A'..='Z' => a as usize - 64 + 26,
+                                    _ => unreachable!(),
+                                }
+                            }
+                        }
+
+                        unreachable!()
+                    }).sum()
+            }
+        ],
+        // // Day X
         // [
         //     // Part 1
         //     |path: &str| -> usize {},
